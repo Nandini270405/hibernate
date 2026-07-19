@@ -28,6 +28,6 @@ public class Option {
     @Column(name = "op_text", length = 100, nullable = false)
     private String text;
 
-    @Column(name = "op_score", precision = 5, scale = 2, nullable = false)
+    @Column(name = "op_score", nullable = false)
     private double score;
 }

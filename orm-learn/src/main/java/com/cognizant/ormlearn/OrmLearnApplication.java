@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import java.math.BigDecimal;
 import java.sql.Date;
@@ -25,6 +26,7 @@ public class OrmLearnApplication {
     private static DepartmentService departmentService;
     private static SkillService skillService;
     private static AttemptService attemptService;
+    private static TransactionTemplate transactionTemplate;
 
     public static void main(String[] args) {
         ApplicationContext context = SpringApplication.run(OrmLearnApplication.class, args);
@@ -36,46 +38,48 @@ public class OrmLearnApplication {
         departmentService = context.getBean(DepartmentService.class);
         skillService = context.getBean(SkillService.class);
         attemptService = context.getBean(AttemptService.class);
+        transactionTemplate = context.getBean(TransactionTemplate.class);
 
-        // --- Execute Handson Tests ---
-        
-        // 1. Country CRUD Operations
-        LOGGER.info("---------- Country Handson 1 & 6 & 7 & 8 & 9 ----------");
-        testGetAllCountries();
-        testFindCountryByCode();
-        testAddCountry();
-        testUpdateCountry();
-        testDeleteCountry();
+        // --- Execute Handson Tests inside a Transaction ---
+        transactionTemplate.executeWithoutResult(status -> {
+            // 1. Country CRUD Operations
+            LOGGER.info("---------- Country Handson 1 & 6 & 7 & 8 & 9 ----------");
+            testGetAllCountries();
+            testFindCountryByCode();
+            testAddCountry();
+            testUpdateCountry();
+            testDeleteCountry();
 
-        // 2. Query Methods on Country
-        LOGGER.info("---------- Country Query Methods Handson 1 ----------");
-        testFindByNameContaining();
-        testFindByNameContainingOrderByNameAsc();
-        testFindByNameStartingWith();
+            // 2. Query Methods on Country
+            LOGGER.info("---------- Country Query Methods Handson 1 ----------");
+            testFindByNameContaining();
+            testFindByNameContainingOrderByNameAsc();
+            testFindByNameStartingWith();
 
-        // 3. Stock Queries
-        LOGGER.info("---------- Stock Queries Handson 2 ----------");
-        testStockQueries();
+            // 3. Stock Queries
+            LOGGER.info("---------- Stock Queries Handson 2 ----------");
+            testStockQueries();
 
-        // 4. Payroll Mappings (Many-to-One, One-to-Many, Many-to-Many)
-        LOGGER.info("---------- Payroll Mappings Handson 4 & 5 & 6 ----------");
-        testGetEmployee();
-        testAddEmployee();
-        testUpdateEmployee();
-        testGetDepartment();
-        testAddSkillToEmployee();
+            // 4. Payroll Mappings (Many-to-One, One-to-Many, Many-to-Many)
+            LOGGER.info("---------- Payroll Mappings Handson 4 & 5 & 6 ----------");
+            testGetEmployee();
+            testAddEmployee();
+            testUpdateEmployee();
+            testGetDepartment();
+            testAddSkillToEmployee();
 
-        // 5. HQL, JPQL & Native Queries
-        LOGGER.info("---------- HQL and JPQL and Native Queries Handson 2 & 4 & 5 ----------");
-        testGetAllPermanentEmployees();
-        testAverageSalary();
-        testGetAllEmployeesNative();
+            // 5. HQL, JPQL & Native Queries
+            LOGGER.info("---------- HQL and JPQL and Native Queries Handson 2 & 4 & 5 ----------");
+            testGetAllPermanentEmployees();
+            testAverageSalary();
+            testGetAllEmployeesNative();
 
-        // 6. Quiz attempt details HQL fetch
-        LOGGER.info("---------- Quiz Attempt Fetch Handson 3 ----------");
-        testGetAttempt();
-        
-        LOGGER.info("All Exercises executed successfully!");
+            // 6. Quiz attempt details HQL fetch
+            LOGGER.info("---------- Quiz Attempt Fetch Handson 3 ----------");
+            testGetAttempt();
+            
+            LOGGER.info("All Exercises executed successfully!");
+        });
     }
 
     // --- Country Test Methods ---

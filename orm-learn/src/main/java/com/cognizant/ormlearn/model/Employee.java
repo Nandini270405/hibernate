@@ -25,7 +25,7 @@ public class Employee {
     @Column(name = "em_name", length = 100, nullable = false)
     private String name;
 
-    @Column(name = "em_salary", precision = 10, scale = 2, nullable = false)
+    @Column(name = "em_salary", nullable = false)
     private double salary;
 
     @Column(name = "em_permanent", nullable = false)
